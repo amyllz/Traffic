@@ -1,0 +1,107 @@
+.header{ 
+	padding: 0;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	background-color: rgba(0, 0, 0, 1);
+	position: absolute; 
+	top: 0; 
+	left: 0;
+	height: 50px;
+}
+.headtext{	
+	color: white;
+	font-family: "Montserrat","Helvetica Neue", Helvetica, Arial, sans-serif;
+	padding-left: 30px;
+	vertical-align: middle;
+	min-width: 230px;
+}
+.headbar{
+	font-weight:bold;
+	font-size: 18px;
+	height: 100%;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	min-width: 380px;
+	float: right;
+}
+.button{
+	margin-right: 10px;
+	background-color: transparent;
+	border: none;
+	outline: none; 
+	color: rgb(132, 151, 176);
+}
+/* 鼠标移动到导航栏按钮上的样式 */	
+.button:hover{
+	color:white;
+} 
+
+/* 小标题 */
+.section_title{
+	text-align: center;
+	margin-top: 10px;
+}
+
+button{
+	font-style: normal;
+}
+
+/* 第一功能区 */
+#left_section{
+	padding: 0;
+	height: 100%; 
+	padding-top: 60px;
+	display: inline-block;
+}
+
+/* 车流方向选框 */
+.direction{
+	width: 100%;
+	text-align: left;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content:space-between;
+}
+
+/* 预测结果div */
+#result{
+	width: 100%; 
+	display: flex; 
+	flex-direction: row;
+	align-items: center;
+	justify-content:space-around;
+	padding-right: 10px;
+}
+
+/* 日期选框 */
+.time{
+	display: inline-block;
+	width:10%;
+	min-width: 98px;
+}
+
+#echarts1{
+	width: 98.5%; 
+	margin-top: 10px;
+	background-color: black;
+	margin-bottom: 10px;
+}
+
+/* 右侧栏 */
+#right_section{
+	padding: 0;
+	height: 100%; 
+	padding-top: 60px;
+	display: inline-block;
+}
+
+#mainchart{
+	display: inline-block; 
+	height: 70px; 
+	width: 95%;
+	margin-top: 10px;
+	margin-left: 2.5%;
+}

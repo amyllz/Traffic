@@ -1,0 +1,199 @@
+<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title> 历史路况 </title> 
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--CSS样式-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">  
+    <!--图标样式-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- 日期路段控件CSS -->
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.css">
+	<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+	<link rel="stylesheet" href="css/city-picker.css">
+	<!-- 自定义CSS文件-->
+	<link rel="stylesheet" href="css/mybootstrap1.css"> 
+	<!--引用百度地图API-->
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=nB0d5UdlLhy7GkSuD7yah8UC2am1RGxc"></script>
+</head>
+
+<body>
+	<div class="header">  
+		<!--<span class="glyphicon glyphicon-transfer headicon" float:left"> </span>-->
+		<p class="headtext" style="float:left"> Link in Traffic </p>
+		<div class="headbar">	
+			<div class="navbar" role="navigation">
+        	<div class="collapse navbar-collapse" id="bs-navbar-collapse">
+        		<ul class="nav navbar-nav">
+            		<li class="active"><a href="http://127.0.0.1:8020/301/history.html">历史路况</a></li>
+            		<li><a href="http://127.0.0.1:8020/301/spatio-temporal.html">时空关系</a></li>
+            		<li><a href="http://127.0.0.1:8020/301/congestion.html">拥堵分析</a></li>
+       	 		</ul>
+       	 	</div>
+       	 	</div>
+    	</div>	
+    </div>		
+	
+	<section class="operations" id="operations">		
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-3 searchbox">
+					<div class="list-group">
+						<p class="paneltext" style="text-align:center;font-size:20px;font-weight: bold;">查询面板</p>
+						<p class="paneltext">全局路况：</p>
+						<p><div class="input-group">
+							<input type="text" class="form-control" id="datetimepicker1" value="2013-10-10 17:00" type="text" placeholder="时间" toggleType="explode" >
+						    	<span class="input-group-btn">
+						        	<button class="btn btn-default" type="button" onclick="getFullRoad()">查询</button>
+						    	</span>
+						</div></p>
+						<p class="paneltext">详情查看：</p>
+						<div><form role="form">
+							<div class="form-group">
+								<label class="sr-only" for="city-picker3">路段</label>
+								<input id="city-picker3" class="form-control" readonly  type="text" value="杭州市/西湖区/玉古路" data-toggle="city-picker">
+							</div>
+							<div class="input-group">
+								<input type="text" class="form-control" id="datetimepicker2" value="2013-10-10 17:00" type="text" placeholder="时间" toggleType="explode" >
+								<span class="input-group-btn">
+							    	<button class="btn btn-default" type="button" onclick="sure()">查询</button>
+								</span>
+							</div>
+						</form></div>
+						<p></p><p class="paneltext">路段查询：</p>
+						<div><form role="form">
+							<div class="form-group">
+								<label class="sr-only" for="roadnum">路段</label>
+								<input id="roadnum" class="form-control" type="text" value="281" placeholder="路段编号">
+							</div>
+							<div class="input-group">
+								<input type="text" class="form-control" id="datetimepicker3" value="2013-10-10 17:00" type="text" placeholder="时间" toggleType="explode" >
+								<span class="input-group-btn">
+							    	<button class="btn btn-default" type="button" onclick="roadsure()">查询</button>
+								</span>
+							</div>
+						</form></div>
+					</div>	
+				</div>	
+			</div>
+		</div>
+		<div class="map">
+			<div style="width:697px;height:475px;border:#ccc solid 1px;" id="dituContent"></div>
+		</div>	
+		<div class="colorbar">
+			<img src="img/colorbar.png">
+		<div></div>	
+	</section> 
+
+
+	<!--js文件-->
+	<script type="text/javascript" src="js\jquery-1.8.3.min.js"></script>	
+    <script type="text/javascript" src="js\bootstrap.js"></script>	
+	<!--日期控件js-->
+	<script type="text/javascript" src="js\bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="js\bootstrap-datetimepicker.fr.js"></script>
+	<!--道路选择js-->
+	<script type="text/javascript" src="js\city-picker.data.js"></script>
+	<script type="text/javascript" src="js\city-picker.js"></script>
+	
+    <script type="text/javascript">		
+		/*时间控件的JS程序*/
+		$(document).ready(function(){ 
+			//第一个时间控件
+	    	$('#datetimepicker1').datetimepicker({
+	   		lang:'ch',
+		    autoclose: true,
+		    todayBtn: true,
+		    format: "yyyy-mm-dd hh:ii",
+		    minView: 1
+		   	});
+		   	$('#datetimepicker1').datetimepicker('setStartDate', '2013-01-01 00:00');
+		   	$('#datetimepicker1').datetimepicker('setEndDate', '2014-01-31 23:00');
+		   	//第二个时间控件
+	   		$('#datetimepicker2').datetimepicker({
+	   		lang:'ch',
+		    autoclose: true,
+		    todayBtn: true,
+		    format: "yyyy-mm-dd hh:ii",
+		    minView: 1
+		   	});
+		   	$('#datetimepicker2').datetimepicker('setStartDate', '2013-01-01 00:00');
+		   	$('#datetimepicker2').datetimepicker('setEndDate', '2014-01-31 23:00');
+		   	//第三个时间控件
+	   		$('#datetimepicker3').datetimepicker({
+	   		lang:'ch',
+		    autoclose: true,
+		    todayBtn: true,
+		    format: "yyyy-mm-dd hh:ii",
+		    minView: 1
+		   	});
+		   	$('#datetimepicker3').datetimepicker('setStartDate', '2013-01-01 00:00');
+		   	$('#datetimepicker3').datetimepicker('setEndDate', '2014-01-31 23:00');
+		});
+	</script>	
+
+	<!--从服务器取数据并且绘图-->
+	<script type="text/javascript" src="js\function1.js"></script>
+	<script type="text/javascript" src="js\utils.js"></script>
+	<script type="text/javascript" src="js\color.js"></script>
+	<script type="text/javascript" src="js/drive.js"></script>
+	
+	<script type="text/javascript">
+    //创建和初始化地图函数：
+    function initMap(){
+        createMap();//创建地图
+        setMapEvent();//设置地图事件
+        addMapControl();//向地图添加控件
+    }
+    
+    //创建地图函数：
+    function createMap(){
+        var map = new BMap.Map("dituContent");//在百度地图容器中创建一个地图
+        var point = new BMap.Point(120.155069, 30.274089);//定义一个中心点坐标
+        map.centerAndZoom(point,12);//设定地图的中心点和坐标并将地图显示在地图容器中
+        window.map = map;//将map变量存储在全局
+    }
+    
+    //地图事件设置函数：
+    function setMapEvent(){
+        map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+        map.enableScrollWheelZoom();//启用地图滚轮放大缩小
+        map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+        map.enableKeyboard();//启用键盘上下左右键移动地图
+    }
+    
+    //地图控件添加函数：
+    function addMapControl(){
+        //向地图中添加缩放控件
+		var ctrl_nav = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
+		map.addControl(ctrl_nav);
+        //向地图中添加缩略图控件
+		var ctrl_ove = new BMap.OverviewMapControl({anchor:BMAP_ANCHOR_BOTTOM_RIGHT,isOpen:0});
+		map.addControl(ctrl_ove);
+        //向地图中添加比例尺控件
+		var ctrl_sca = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT});
+		map.addControl(ctrl_sca);
+    }
+      
+    initMap();//创建和初始化地图
+    
+	function add_overlay(){   //添加遮盖图层
+    	var pStart = new BMap.Point(100,25);
+		var pEnd = new BMap.Point(130,35);
+		var rectangle = new BMap.Polygon([
+			new BMap.Point(pStart.lng,pStart.lat),
+			new BMap.Point(pEnd.lng,pStart.lat),
+			new BMap.Point(pEnd.lng,pEnd.lat),
+			new BMap.Point(pStart.lng,pEnd.lat)
+		], {strokeColor:"grey", strokeWeight:1, strokeOpacity:0.5});  //创建矩形
+		rectangle.setFillColor("black");	
+		rectangle.setFillOpacity(0.4);
+		map.addOverlay(rectangle);         //添加矩形	 
+	}
+	</script>
+	
+</body>	
+</html>

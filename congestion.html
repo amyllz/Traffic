@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title> 拥堵分析 </title> 
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+   	<!--CSS样式-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!--Font Awesome图标样式 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- 日期路段控件CSS -->
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.css">
+	<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+	<!-- 自定义CSS文件-->
+	<link rel="stylesheet" href="css/mybootstrap3.css"> 
+	<!--引用百度地图API-->
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=nB0d5UdlLhy7GkSuD7yah8UC2am1RGxc"></script>
+	<!--加载鼠标绘制工具-->
+	<script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
+	<link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
+	<!-- 引入 ECharts 文件 -->
+    <script src="js/echarts.min.js"></script> 
+</head>
+
+
+<body style="overflow:scroll;overflow-y:hidden">
+	<div class="header">  
+		<p class="headtext" style="float:left"> Link in Traffic </p>
+		<div class="headbar">	
+			<div class="navbar" role="navigation">
+        	<div class="collapse navbar-collapse" id="bs-navbar-collapse">
+        		<ul class="nav navbar-nav">
+            		<li><a href="http://127.0.0.1:8020/301/history.html">历史路况</a></li>
+            		<li><a href="http://127.0.0.1:8020/301/spatio-temporal.html">时空关系</a></li>
+            		<li class="active"><a href="http://127.0.0.1:8020/301/congestion.html">拥堵分析</a></li>
+       	 		</ul>
+       	 	</div>
+       	 	</div>
+    	</div>	
+    </div>
+ 
+	<section class="operations" id="operations">	
+    	<div class="container">
+			<div class="row">		
+				<div class="col-sm-offset-7 list-group">  <!--在这里面写，从第7列开始-->		
+					
+					<p class="select-headtext">查询条件选择</p>
+					<div class="input-group">
+						<input type="text" class="form-control" id="datetimepicker" value="2013-11-16" type="text" placeholder="时间" toggleType="explode" style="width:160px;display:inline;margin-right: 160px;">						
+						<button type="button" class="btn btn-default btn-group-sm style="display:inline;" onclick="plotCongestion()">    <!--内联元素、按钮和表单在同一行-->
+							<span class="fa fa-table"> 拥堵 </span>
+						</button>
+						<button type="button" class="btn btn-default btn-group-sm style="display:inline;" onclick="plotBoxplot()"> 
+							<span class="fa fa-lemon-o"> 查询 </span>
+						</button>
+					</div>
+   	 						
+   	 				<p></p><div class="form-horizontal col-sm-4">
+        				<button type="button" class="btn btn-default btn-group-sm" id="morning" value="43" style="margin-left:-15px;" onclick="">
+							<span class="fa fa-star-o"> &nbsp;&nbsp;早高峰 7-9am</span>
+						</button>	
+					</div>
+
+					<button type="button" class="btn btn-default btn-group-sm" id="noon" value="67" style="margin-left:-20px;"onclick="">
+						<span class="fa fa-sun-o"> &nbsp;&nbsp;午高峰 11-13pm</span>
+					</button>
+						
+					<button type="button" class="btn btn-default btn-group-sm" id="evening" value="97" onclick=""><!--,getNumfromRect()-->
+						<span class="fa fa-moon-o"> &nbsp;&nbsp;晚高峰 16-19pm</span>
+					</button>
+					
+					<p></p><div><form role="form">
+						<div class="form-group col-sm-4" style="margin:0 -15px;display:inline;">
+							<label class="sr-only" for="roadnum1">目标路段</label>
+							<input id="roadnum1" class="form-control" type="text" value="" placeholder="目标路段编号">							
+						</div>	
+						<div class="form-group col-sm-8" style="margin-left:-10px; width:350px">
+							<label class="sr-only" for="roadnum2">影响路段</label>
+							<input id="roadnum2" class="form-control" type="text" value="" placeholder="影响路段编号">
+						</div>
+					</form></div>
+				
+					<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    				<div class="mainchart" id="mainchart" style="width: 480px;height:370px;"></div>
+
+				</div> <!--end of list-group-->
+			</div>	   <!--end of row-->
+			
+			<div class="map">
+				<!--<div style="width:650px;height:475px;border:#ccc solid 1px;" id="dituContent"></div>--> 
+				<div id="chart" style="width: 665px;height:220px;margin:0 0 10px -7px;"></div>
+				<div id="dituContent" style="width: 650px;height:280px;border:#ccc solid 1px;"></div>
+			</div>
+			
+		</div>  <!--end of container-->
+    </section>  
+    
+
+	<!--js文件-->
+	<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>	
+    <script type="text/javascript" src="js/bootstrap.js"></script>	
+	<!--日期控件js-->
+	<script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap-datetimepicker.fr.js"></script>
+	<!--箱线图js-->
+	<script type="text/javascript" src="js/dataTool.min.js"></script>
+	<!--在echarts中使用百度地图-->
+	<script type="text/javascript" src="js/bmap.js"></script>
+	
+	<script type="text/javascript">		
+		/*时间控件的JS程序*/
+		$(document).ready(function(){ 
+			//查询时间控件
+	    	$('#datetimepicker').datetimepicker({
+	   		lang:'ch',
+		    autoclose: true,
+		    todayBtn: true,
+		    format: "yyyy-mm-dd",
+		    minView: "month"  //只选择到日期
+		   	});
+		   	$('#datetimepicker').datetimepicker('setStartDate', '2013-01-01');
+		   	$('#datetimepicker').datetimepicker('setEndDate', '2014-01-31');
+		});
+	</script>	
+	
+	<script type="text/javascript" src="js/function3.js"></script>
+	<script type="text/javascript">	
+		var myChart = echarts.init(document.getElementById('mainchart'));
+		option = {
+    		title: [
+        	{
+            	text: '高峰时段相关系数箱线图',
+            	textStyle: {
+					fontSize: 16,
+					fontWeight: 'bold',
+					fontFamily: 'Microsoft YaHei',
+					color: '#000',
+				},
+            	left: 'center',
+        	},
+        	{
+            		text: 'upper: Q3 + 1.5 * IRQ   lower: Q1 - 1.5 * IRQ',
+            		borderColor: '#999',
+            		borderWidth: 1,
+            		textStyle: {
+                		fontSize: 12
+            		},
+            		left: '22%',
+            		top: '86%'
+        		}
+    		],
+    		tooltip: {
+        		trigger: 'item',
+        		axisPointer: {
+            		type: 'shadow'
+        		}
+    		},
+    		grid: {     //调整图表位置
+        		left: '10%',
+        		right: '5%',
+        		top: '14%',
+        		bottom: '22%'
+    		},
+    		xAxis: {
+        		type: 'category',
+        		data: [0],
+        		boundaryGap: true,
+        		nameGap: 30,
+        		splitArea: {
+            		show: false
+        		},
+        		splitLine: {
+            		show: false
+        		}
+    		},
+    		yAxis: {
+        		type: 'value',
+        		name: 'R between -1&1',
+        		splitArea: {
+            		show: true
+        		}
+    		},
+   			series: [
+        		{
+            		name: 'boxplot',
+            		type: 'boxplot',
+            		data: [0],
+        		},
+        		{
+            		name: 'outlier',
+            		itemStyle: {
+						normal: {
+							color: '#069',
+							borderColor: '#069',
+						}
+					},
+            		type: 'scatter',
+            		data: [0],
+        		}
+    		]
+		};
+		myChart.setOption(option); 
+	</script>
+	
+	
+	<script type="text/javascript">
+		var myChart1 = echarts.init(document.getElementById('chart'));
+		var hours = ['16:00', '16:10', '16:20', '16:30', '16:40', '16:50',
+        	'17:00', '17:10', '17:20','17:30','17:40','17:50', 
+        	'18:00', '18:10', '18:20','18:30','18:40','18:50', 
+        	'19:00', '19:10', '19:20','19:30','19:40','19:50'];
+		var id = ['179','-800','254','180','-271','-253','181'];
+
+		var data = [[0,0,5],[0,1,1],[0,2,0],[0,3,0],[0,4,0],[0,5,0],[0,6,0],[0,7,0],[0,8,0],[0,9,0],[0,10,0],[0,11,2],[0,12,4],[0,13,1],[0,14,1],[0,15,3],[0,16,4],[0,17,6],[0,18,4],[0,19,4],[0,20,3],[0,21,3],[0,22,2],[0,23,5],
+			[1,0,7],[1,1,0],[1,2,0],[1,3,0],[1,4,0],[1,5,0],[1,6,0],[1,7,0],[1,8,0],[1,9,0],[1,10,5],[1,11,2],[1,12,2],[1,13,6],[1,14,9],[1,15,11],[1,16,6],[1,17,7],[1,18,8],[1,19,12],[1,20,5],[1,21,5],[1,22,7],[1,23,2],
+			[2,0,1],[2,1,1],[2,2,0],[2,3,0],[2,4,0],[2,5,0],[2,6,0],[2,7,0],[2,8,0],[2,9,0],[2,10,3],[2,11,2],[2,12,1],[2,13,9],[2,14,8],[2,15,10],[2,16,6],[2,17,5],[2,18,5],[2,19,5],[2,20,7],[2,21,4],[2,22,2],[2,23,4],
+			[3,0,7],[3,1,3],[3,2,0],[3,3,0],[3,4,0],[3,5,0],[3,6,0],[3,7,0],[3,8,1],[3,9,0],[3,10,5],[3,11,4],[3,12,7],[3,13,14],[3,14,13],[3,15,12],[3,16,9],[3,17,5],[3,18,5],[3,19,10],[3,20,6],[3,21,4],[3,22,4],[3,23,1],
+			[4,0,1],[4,1,3],[4,2,0],[4,3,0],[4,4,0],[4,5,1],[4,6,0],[4,7,0],[4,8,0],[4,9,2],[4,10,4],[4,11,4],[4,12,2],[4,13,4],[4,14,4],[4,15,14],[4,16,12],[4,17,1],[4,18,8],[4,19,5],[4,20,3],[4,21,7],[4,22,3],[4,23,0],
+			[5,0,2],[5,1,1],[5,2,0],[5,3,3],[5,4,0],[5,5,0],[5,6,0],[5,7,0],[5,8,2],[5,9,0],[5,10,4],[5,11,1],[5,12,5],[5,13,10],[5,14,5],[5,15,7],[5,16,11],[5,17,6],[5,18,0],[5,19,5],[5,20,3],[5,21,4],[5,22,2],[5,23,0],
+			[6,0,1],[6,1,0],[6,2,0],[6,3,0],[6,4,0],[6,5,0],[6,6,0],[6,7,0],[6,8,0],[6,9,0],[6,10,1],[6,11,0],[6,12,2],[6,13,1],[6,14,3],[6,15,4],[6,16,0],[6,17,0],[6,18,0],[6,19,0],[6,20,1],[6,21,2],[6,22,2],[6,23,6],
+		];
+			
+		var speeddata = [[39,41,41.33,41,40,42,42,33.5,30.33,23,10,12,12,39.5,41,40,41,42,42,42,42,42,42,42],
+			[27.33,25.5,30,30,30,13.33,15,15,17.67,14.5,17.67,12.67,18,17.5,15.67,15,30,24.5,25.33,33,30.67,31.5,31,31],
+			[12,13,30,27.5,25,27,30,25.67,30,22,17.33,23,21,21,19,25,25.67,23.5,20.67,12.5,15,24.67,32,32],
+			[34.33,32,41.33,35.67,40,42,42,41,35,23,25.67,16,12,16,10,24.5,41,42,42,42,42,42,42,42],
+			[30,30,30,30,30,30,30,25,16.67,10,11.67,10,10,15,13,19,30,30,30,30,30,30,30,30],
+			[25,26.5,28,30,35,29,28,30,30,30,25.67,16.67,21,21,28.33,32,32,32,32,32.5,33,33,33,33],
+			[31,37,41.33,33.67,40,42,42,41,25,23,24,14,14.5,16,18.33,32,25,33.5,36.33,42,42,42,42,42],
+		];
+	
+		var i = 0;
+		while(i<168)
+			for(var j=0;j<7;j++)
+				for(var k=0;k<24;k++){
+					data[i][2]=speeddata[j][k];
+					i++;
+				}	
+	
+		data = data.map(function (item) {
+    		return [item[1], item[0], item[2] || '-'];
+    	})
+
+		option = {
+    		tooltip: {
+        		position: 'top'  //提示框浮层的位置
+    		},
+    		animation: false,
+    		grid: {
+        		height: '88%',
+        		width:'85%',
+        		y: '1%',
+    			x: '6%',
+    		},
+    		xAxis: {
+        		type: 'category',
+        		data: hours,
+        		splitArea: {
+            		show: true
+        		},
+        		axisLable: { //x轴刻度标签样式设置
+		    		show: true,
+				},
+				axisLine: { //x轴刻度标签样式设置
+		    		show: false,
+				},
+				axisTick: { //x轴刻度样式设置
+		    		show: false,
+				},
+    		},
+    		yAxis: {
+        		type: 'category',
+        		data: id,
+        		splitArea: {
+            		show: true
+        		},
+        		axisLable: { 
+		    		show: true,
+				},
+				axisLine: { 
+		    		show: false,
+				},
+				axisTick: { 
+		    		show: false,
+				},
+    		},
+    		visualMap: {
+        		min: 10,
+        		max: 50,
+        		calculable: true,    //色条
+	      		orient: 'vertical',
+	      		left: 'right',
+	      		top: '5%',
+        		color: ['lightskyblue','lightgreen','yellow','orangered'],
+    		},
+    		series: [{
+        		name: 'Speed',
+        		type: 'heatmap',
+        		data: [],   //data,
+        		label: {
+            		normal: {
+                		show: false
+           			}
+        		},
+        		itemStyle: {
+            		emphasis: {
+               			shadowBlur: 10,
+                		shadowColor: 'rgba(0, 0, 0, 0.5)' //alpha 通道表示不透明度
+            		}
+        		}
+    		}]
+		};
+		myChart1.setOption(option);   
+		myChart1.on('click', function (params) {
+    		console.log(params);
+		});
+	
+		var myChart2 = echarts.init(document.getElementById('dituContent'));
+		var option = {
+       		bmap: {
+            	center: [120.1366943,30.27792356],
+            	zoom: 15,
+            	roam: true,
+            	mapStyle: {
+                	styleJson: [{
+                    	'featureType': 'water',
+                    	'elementType': 'all',
+                    	'stylers': {
+                        	'color': '#d1d1d1'
+                    	}
+               		}, {
+                    	'featureType': 'land',
+                    	'elementType': 'all',
+                    	'stylers': {
+                        	'color': '#f3f3f3'
+                   		}
+                	}, {
+                    	'featureType': 'railway',
+                    	'elementType': 'all',
+                    	'stylers': {
+                        	'visibility': 'off'
+                    	}
+                	}, {
+                    	'featureType': 'highway',
+                    	'elementType': 'all',
+                    	'stylers': {
+                        	'color': '#fdfdfd'
+                    	}
+               		}, {
+                    	'featureType': 'highway',
+                   		'elementType': 'labels',
+                    	'stylers': {
+                        	'visibility': 'off'
+                    	}
+               		}, {
+                    	'featureType': 'arterial',
+                    	'elementType': 'geometry',
+                    	'stylers': {
+                        	'color': '#fefefe'
+                    	}
+                	}, {
+                    	'featureType': 'arterial',
+                    	'elementType': 'geometry.fill',
+                    	'stylers': {
+                        	'color': '#fefefe'
+                    	}
+                	}, {
+                    	'featureType': 'poi',
+                    	'elementType': 'all',
+                    	'stylers': {
+                        	'visibility': 'off'
+                    	}
+                	}, {
+                    	'featureType': 'green',
+                    	'elementType': 'all',
+                    	'stylers': {
+                        	'visibility': 'off'
+                    	}
+               		}, {
+                    	'featureType': 'subway',
+                    	'elementType': 'all',
+                    	'stylers': {
+                        	'visibility': 'off'
+                    	}
+               		}, {
+                    	'featureType': 'manmade',
+                    	'elementType': 'all',
+                    	'stylers': {
+                        	'color': '#d1d1d1'
+                    	}
+                	}, {
+                    	'featureType': 'local',
+                    	'elementType': 'all',
+                    	'stylers': {
+                        	'color': '#d1d1d1'
+                    	}
+                	}, {
+                    	'featureType': 'arterial',
+                    	'elementType': 'labels',
+                    	'stylers': {
+                        	'visibility': 'off'
+                    	}
+                	}, {
+                    	'featureType': 'boundary',
+                    	'elementType': 'all',
+                    	'stylers': {
+                        	'color': '#fefefe'
+                    	}
+                	}, {
+                    	'featureType': 'building',
+                    	'elementType': 'all',
+                    	'stylers': {
+                        	'color': '#d1d1d1'
+                    	}
+                	}, {
+                    	'featureType': 'label',
+                    	'elementType': 'labels.text.fill',
+                    	'stylers': {
+                        	'color': '#000'
+                    	}
+                	}]
+             	}
+        	},
+        	series: [
+       		{
+            	type: 'lines',
+            	coordinateSystem: 'bmap',
+            	zlevel: 1,
+            	effect: {       //设置拖尾效果
+                	show: true,
+                	period: 6,
+                	trailLength: 0.8,
+                	color: '#f33',
+                	symbolSize: 5
+            	},
+            	lineStyle: {
+                	normal: {
+                    	color:'#f33',
+                    	width: 0,
+                    	curveness: 0.2
+                	}
+            	},
+            	data: [
+//              	{	coords: [  //179
+//              			[120.1307778,30.27839594],[120.13428,30.27812228],[120.1367524,30.277918]
+//                  	],
+//                  },
+//                  { 	
+//                  	coords: [  //180
+//              			[120.1367524,30.277918],[120.1402332,30.27759544],[120.143119,30.27739667]
+//                  	],                    	
+//              	},
+//              	{ 	
+//                  	coords: [  //181
+//              			[120.143119,30.27739667],[120.1494737,30.27780526],[120.1522231,30.27798689]
+//                  	],                    	
+//              	},
+//              	{ 	
+//                  	coords: [  //-271
+//              			[120.1429353,30.2773813],[120.1433234,30.27241162],[120.1435377,30.27050137]
+//                  	], 
+//              	},
+//              	{ 	
+//                  	coords: [  //-253
+//                  		[120.1363232,30.28319777],[120.1365425,30.2807379],[120.1367213,30.27878528],[120.1367434,30.27831808],[120.1367143,30.27802137]
+//                  	], 
+//              	},
+           		],
+            	polyline: true,
+        	},
+        	{                    //设置线段效果
+            	type: 'lines',
+            	coordinateSystem: 'bmap',
+            	zlevel: 2,
+            	rippleEffect: {
+                	brushType: 'stroke'
+            	},
+            	effect: {
+                	show: true,
+                	period: 6,
+                	trailLength: 0,
+                	symbol: 'arrow',
+                	symbolSize: 10
+            	},
+            	data: [
+//          		{	coords: [  //-800
+//              			[120.1366943,30.27792356],[120.135247,30.27444359],[120.134004,30.27157318],
+//          			],
+//              	},
+            	],
+            	polyline: true,
+            	lineStyle: {
+            		normal: {
+                		color: '#f33',
+                		width: 3,
+                		opacity: 0.6,
+                		curveness: 0.2  //有polyline时curveness不可用
+           			}
+            	},
+        	},
+        	]
+    	};          
+		myChart2.setOption(option);   
+	</script>
+
+
+</body>
+</html>

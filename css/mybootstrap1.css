@@ -1,0 +1,69 @@
+.map{
+	position:absolute;
+	left:550px;
+	top:135px;
+	margin:0;
+	padding:0;
+}
+
+.colorbar{
+	position: absolute;
+	left:563px;
+	top:350px;	
+}
+
+
+
+.header{
+	background-color:lavender;
+	position:absolute; 
+	left:0px; 
+	top:0px; 
+	width:100%; 
+	height:16%; 
+	z-index:-1;
+	font-family: "Microsoft YaHei","Segoe UI", "Lucida Grande", Helvetica, Arial,sans-serif;
+}
+.headicon{
+	margin-top: 35px;
+	margin-left: 40px;
+	font-size: 35px;
+}
+.headtext{
+	margin-top: 30px;
+	margin-left:120px;
+	font-size: 30px;
+	font-weight: bold;
+}
+.headbar{
+	position: absolute;
+	top:30px;
+	right:100px;
+	display: table-cell;
+}
+.headbar .navbar .nav li a{
+	color: lightseagreen;
+	font-family: "open_regular", Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	font-family: "Microsoft YaHei","Segoe UI", "Lucida Grande", Helvetica, Arial,sans-serif;
+}
+
+.operations{
+	width: 100%;
+	margin: 95px 0 0 0;
+	padding: 30px 0 535px 0;
+	background-color: whitesmoke; /*honeydew*/
+}
+
+.container .searchbox{
+	position: absolute;
+	background-color: lavender;
+	left:100px;
+	top:170px;
+	padding: 20px 20px;
+	font-family: "Microsoft YaHei","Segoe UI", "Lucida Grande", Helvetica, Arial,sans-serif;
+}
+.container .paneltext{
+	font-size:15px;
+}

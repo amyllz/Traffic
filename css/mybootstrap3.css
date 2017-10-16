@@ -1,0 +1,87 @@
+#dituContent label{    /*解决bootstrap和baidu map api label 冲突问题*/
+	max-width: none;
+}
+
+.map{
+	position:absolute;
+	left:100px;
+	top:115px;
+	margin:0;
+	padding:0;
+	/*border: solid lavender 10px;*/
+}
+.iw_poi_title {color:#CC5522;font-size:14px;font-weight:bold;overflow:hidden;padding-right:13px;white-space:nowrap}
+.iw_poi_content {font:12px arial,sans-serif;overflow:visible;padding-top:4px;white-space:-moz-pre-wrap;word-wrap:break-word}
+
+.mainchart{  /*可视化区域*/
+	position: absolute;
+	left:774px;
+	top:295px;
+}
+
+.header{
+	background-color: lavender;
+	position:absolute; 
+	left:0px; 
+	top:0px; 
+	width:100%; 
+	height:16%; 
+	z-index:-1;
+	font-family: "Microsoft YaHei","Segoe UI", "Lucida Grande", Helvetica, Arial,sans-serif;
+}
+.headicon{
+	margin-top: 35px;
+	margin-left: 40px;
+	font-size: 35px;
+}
+.headtext{
+	margin-top: 30px;
+	margin-left:120px;
+	font-size: 30px;
+	font-weight: bold;
+}
+.headbar{
+	position: absolute;
+	top:30px;
+	right:100px;
+	display: table-cell;
+}
+.headbar .navbar .nav li a{
+	color: lightseagreen;
+	font-family: "open_regular", Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	font-family: "Microsoft YaHei","Segoe UI", "Lucida Grande", Helvetica, Arial,sans-serif;
+}
+
+
+.operations{
+	width: 100%;
+	margin: 95px 0 0 0;
+	padding: 30px 0 450px 0;
+	background-color: whitesmoke; /*honeydew*/
+}
+
+.select-headtext{
+	position: relative;
+	margin-left:188px;
+	margin-bottom: 3px;
+	font-family: "Microsoft YaHei","Segoe UI", "Lucida Grande", Helvetica, Arial,sans-serif;
+	font-size:16px;
+	font-weight: bold;
+}
+
+.filter-box{
+	position: absolute;
+	top: 120px;
+	left: 100px;
+	width: 48%;
+}
+
+.filter-headtext{
+	position: relative;
+	margin:5px 0 5px 0px;   /*上右下左*/
+	font-family: "Microsoft YaHei","Segoe UI", "Lucida Grande", Helvetica, Arial,sans-serif;
+	font-size:16px;
+	font-weight: bold;
+}

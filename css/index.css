@@ -1,0 +1,50 @@
+@charset "utf-8"
+<style>
+body{}
+.header{
+	padding: 0;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	background-color: rgba(0, 0, 0, 0.6);
+}
+.headtext{	
+	color: white;
+	font-family: "Montserrat","Helvetica Neue", Helvetica, Arial, sans-serif;
+	padding-left: 5%;
+	padding-top: 1.5%;
+	padding-bottom: 1.5%;
+}
+.headbar{
+	font-weight:bold;
+	font-size: 18px;
+	height: 100%;
+	display: flex;
+	justify-content: flex-end;
+}
+.button{
+	margin-right: 10px;
+	background-color: transparent;
+	border: none;
+	outline: none; 
+	color: rgb(132, 151, 176);
+}
+/* 鼠标移动到导航栏按钮上的样式 */	
+.button:hover{
+	color:white;
+} 
+.container{
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	font-family: "Microsoft YaHei","Segoe UI", "Lucida Grande", Helvetica, Arial,sans-serif;
+	background-color: rgba(255, 255, 255, 0.9);
+	width: 100%;
+	padding: 2%;
+}
+.sub-heading{
+	font-weight: bold;
+}
+.item{
+	text-align: center;
+}
