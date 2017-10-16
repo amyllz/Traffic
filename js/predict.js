@@ -1,4 +1,4 @@
-var multi = 1;        //车流方向默认为+
+var multi;        //车流方向默认为+
 var gg_lon=0;
 var gg_lat=0;
 var x_pi = 3.14159265358979324 * 3000.0 / 180.0;
@@ -21,10 +21,22 @@ function direction_n(){
 $(window).resize(function() {
     var myChart = echarts.getInstanceByDom(document.getElementById("mainchart"));
     myChart.resize();
+    //左侧echarts计算和赋予高度
+    var height1 = $("#height1").height();
+    var left_section = $("#left_section").height();
+    var echatr1_height = parseFloat(left_section) - parseFloat(height1) - parseFloat(20) - parseFloat(10);
+    $("#echarts1").css("height", echatr1_height);
+
+    //地图高度
+    var map_height = parseFloat(left_section) - parseFloat(300);
+    $("#Mapcontainer").css("height", map_height);
 });
 
 /*时间控件的JS程序*/
 $(document).ready(function(){ 
+    //多选控件
+    $('.selectpicker').selectpicker({'selectedText': ''});
+
     //查询时间控件(左侧栏起始)
 	$('#datetimepicker').datetimepicker({
 	   	lang:'ch',
@@ -64,7 +76,7 @@ $(document).ready(function(){
     $("#echarts1").css("height", echatr1_height);
 
     //地图高度
-    var map_height = parseFloat(left_section) - parseFloat(190);
+    var map_height = parseFloat(left_section) - parseFloat(300);
     $("#Mapcontainer").css("height", map_height);
 	//创建和初始化地图函数：
     function initMap(){
@@ -260,6 +272,9 @@ function LineOverlayComplete(e) {
 		
 	
 //从用户绘制线段中获取输入数据  //road_target编号对应
+    if (multi == null){
+        direction_p(); //默认车流方向为正
+    }
 	document.getElementById("roadnum0").value ="";//清除input框内原有数据
 	console.log(multi);
 	var time=document.getElementById("datetimepicker").value;

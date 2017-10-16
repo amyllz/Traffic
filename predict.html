@@ -6,9 +6,11 @@
 	<meta name="viewport" content="width=device-width,height=device-height, initial-scale=1.0">
 	<title> 拥堵预测 </title> 
     <!--CSS样式-->
-    <link rel="stylesheet" href="css/bootstrap.min.css">  
+    <link rel="stylesheet" href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <!-- 日期路段控件CSS -->
 	<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+	<!--多选控件css-->
+    <link rel="stylesheet" href="css/bootstrap-select.css">
 	<!-- 自定义CSS文件-->
 	<link rel="stylesheet" href="css/predict.css"> 
     <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
@@ -22,6 +24,8 @@
     <script src="js/echarts.min.js"></script> 
     <!--日期控件js-->
     <script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
+    <!--多选控件js-->
+    <script type="text/javascript" src="js/bootstrap-select.js"></script>
     <!--功能js-->
     <script type="text/javascript" src="js/predict.js"></script> 
     <script type="text/javascript" src="js/function4.js"></script> 
@@ -46,7 +50,7 @@
 </div>  
 
 <!--第一功能块 路段选择-->
-<div id="left_section" class="col-md-5 col-sm-5 col-xs-12">
+<div id="left_section" class="col-md-4 col-sm-4 col-xs-12">
     <div style="margin-left: 3%;width: 97%;border-right: solid 1px rgb(80, 80, 80);">
     <div id="height1">
     <p class="section_title" style="margin-top: 0;">——&nbsp;&nbsp;路段选择&nbsp;&nbsp;——</p>
@@ -74,9 +78,12 @@
             <input id="roadnum0" class="form-control" type="text" value="" placeholder="目标路段编号">
         </div>
         <button class="btn btn-default" type="button" style="width: 49%;" onclick="search()">Generate</button>
-        <div class="btn-group" style="width: 98.5%;margin-top: 10px;">
-            <textarea id="roadnum" class="form-control" type="text" style="height: 85px;" placeholder="高相关路段"></textarea>
-        </div>
+
+        <label for="id_select"></label>
+		<select id="id_select" class="selectpicker bla bla bli" multiple data-live-search="true">
+    		
+    		</optgroup>
+  		</select>
 
         <!--第一功能块 预测结果-->
         <p class="section_title">——&nbsp;&nbsp;预测结果&nbsp;&nbsp;——</p>
@@ -92,13 +99,13 @@
 </div>
 
 <!--右侧栏-->
-<div id="right_section" class="col-md-7 col-sm-7 col-xs-12">
+<div id="right_section" class="col-md-8 col-sm-8 col-xs-12">
     <!--第二功能块 地图-->
     <div style=" width: 97%;border-radius:2px;margin-left: 15px;" id="Mapcontainer"></div>
 
     <!--第三功能块 -->
-    <div style="text-align: center;margin-top: 15px;">
-    <p class="section_title">——&nbsp;&nbsp;预测部分&nbsp;&nbsp;——</p>
+    <div style="text-align: center;margin-top: 30px;">
+    <p class="section_title" style="margin-bottom: 30px;">——&nbsp;&nbsp;预测部分&nbsp;&nbsp;——</p>
     目标路段编号：
     <div class="btn-group" style="width: 15%;margin-right: 20px;">
     <input id="roadnum1" class="form-control" type="text" value="" placeholder="目标路段编号">
@@ -109,6 +116,5 @@
     <div id="mainchart"></div>
     </div>
 </div>  
-
 </body>
 </html>

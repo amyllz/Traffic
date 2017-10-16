@@ -47,6 +47,19 @@ function search(){   //查询路段的相关性并排序
 		Sort(segment_ID,segment_r);//不用赋值也会改变
 		console.log(segment_ID);
 		console.log(segment_r);
+
+		var length = segment_ID.length;
+		if(length == "0"){
+			alert("该路段无相关路段，请重新选择！");
+		}
+		else{
+			for(i = 0; i < length; i++){
+				$("#id_select").append("<option value='" + segment_ID[i] + "'>" + segment_ID[i] + "," + segment_r[i] + "</option>");
+				$(".inner").append(
+					"<li rel='" + i +"' class><a tabindex='0' class style><span class='text'>"+ segment_ID[i] + "," + segment_r[i] + "</span><i class='glyphicon glyphicon-ok icon-ok check-mark'></i></a></li>"
+				);
+			}
+		}
 	});
 		
 }
