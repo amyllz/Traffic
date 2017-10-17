@@ -1,7 +1,15 @@
 var time=0;
 var road=0;
 
+$(document).ready(function(){ 
+	$(".filter-option").text("Multiple Choice : No., correlation coefficent");
+})
+
 function search(){   //查询路段的相关性并排序
+	//清楚选框中内容
+	$("#id_select").empty();
+	$(".inner").empty();
+	$(".filter-option").text("Please wait");
 //获取用户选择的路段编号	
 	var road=document.getElementById("roadnum0").value;
 	var time=document.getElementById("datetimepicker2").value;
@@ -53,10 +61,11 @@ function search(){   //查询路段的相关性并排序
 			alert("该路段无相关路段，请重新选择！");
 		}
 		else{
+			$(".filter-option").text("Multiple Choice : No., correlation coefficent");
 			for(i = 0; i < length; i++){
-				$("#id_select").append("<option value='" + segment_ID[i] + "'>" + segment_ID[i] + "," + segment_r[i] + "</option>");
+				$("#id_select").append("<option value='" + segment_ID[i] + "'>" + segment_ID[i] + "</option>");
 				$(".inner").append(
-					"<li rel='" + i +"' class><a tabindex='0' class style><span class='text'>"+ segment_ID[i] + "," + segment_r[i] + "</span><i class='glyphicon glyphicon-ok icon-ok check-mark'></i></a></li>"
+					"<li rel='" + i +"' class><a tabindex='0' class style><span class='text'>"+ segment_ID[i] + " , " + segment_r[i] + "</span><i class='glyphicon glyphicon-ok icon-ok check-mark'></i></a></li>"
 				);
 			}
 		}
